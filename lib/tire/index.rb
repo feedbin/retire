@@ -433,20 +433,20 @@ module Tire
     def register_percolator_query(name, options={}, &block)
       options[:query] = Search::Query.new(&block).to_hash if block_given?
 
-      @response = Configuration.client.put "#{Configuration.url}/_percolator/#{@name}/#{name}", MultiJson.encode(options)
+      @response = Configuration.client.put "#{Configuration.url}/#{@name}/.percolator/#{name}", MultiJson.encode(options)
       MultiJson.decode(@response.body)['ok']
 
     ensure
-      curl = %Q|curl -X PUT "#{Configuration.url}/_percolator/#{@name}/#{name}?pretty" -d '#{MultiJson.encode(options, :pretty => Configuration.pretty)}'|
+      curl = %Q|curl -X PUT "#{Configuration.url}/#{@name}/.percolator/#{name}?pretty" -d '#{MultiJson.encode(options, :pretty => Configuration.pretty)}'|
       logged('_percolator', curl)
     end
 
     def unregister_percolator_query(name)
-      @response = Configuration.client.delete "#{Configuration.url}/_percolator/#{@name}/#{name}"
+      @response = Configuration.client.delete "#{Configuration.url}/#{@name}/.percolator/#{name}"
       MultiJson.decode(@response.body)['ok']
 
     ensure
-      curl = %Q|curl -X DELETE "#{Configuration.url}/_percolator/#{@name}"|
+      curl = %Q|curl -X DELETE "#{Configuration.url}/#{@name}/.percolator/#{name}"|
       logged('_percolator', curl)
     end
 
